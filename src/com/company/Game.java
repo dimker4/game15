@@ -1,16 +1,17 @@
 package com.company;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Game {
     private static char[][] map;
     public static GameField gameField;
     private static int SIZE;
+    private static int y;
+    private static int x;
 
     public static void start() {
         int size;
-        boolean gameInProcess = true;
+        int countMovies = 0;
         Scanner sc = new Scanner(System.in);
         System.out.println("Введи размер поля: ");
         size = sc.nextInt();
@@ -22,47 +23,52 @@ public class Game {
 
         while (!checkToWin()) {
             System.out.println("Делай свой ход");
-            int y = sc.nextInt();
-            int x = sc.nextInt();
+            int number = sc.nextInt();
+            getPositionNumber(number);
             makeMove(y, x);
+            countMovies++;
         }
         System.out.println("Победа!");
+        System.out.println("Ты справился за " + countMovies + " ходов.");
     }
 
     public static void makeMove(int y, int x) {
+        // Сначала добавим ограничения по углам
         if (y == x && y == 0) {
-            checkDown(y, x);
-            checkRight(y, x);
+            checkDown();
+            checkRight();
         } else if (y == SIZE && x == 0) {
-            checkUp(y, x);
-            checkRight(y, x);
+            checkUp();
+            checkRight();
         } else if (y == 0 && x == SIZE) {
-            checkLeft(y, x);
-            checkDown(y, x);
+            checkLeft();
+            checkDown();
         } else if (y == SIZE && x == SIZE) {
-            checkLeft(y, x);
-            checkUp(y, x);
+            checkLeft();
+            checkUp();
+            // Затем проверим крайнии линии
         } else if (y == 0) {
-            checkRight(y, x);
-            checkLeft(y, x);
-            checkDown(y, x);
+            checkRight();
+            checkLeft();
+            checkDown();
         } else if (y == SIZE) {
-            checkLeft(y, x);
-            checkRight(y, x);
-            checkUp(y, x);
+            checkLeft();
+            checkRight();
+            checkUp();
         } else if (x == 0){
-            checkUp(y, x);
-            checkDown(y, x);
-            checkRight(y, x);
+            checkUp();
+            checkDown();
+            checkRight();
         } else if (x == SIZE) {
-            checkUp(y, x);
-            checkDown(y, x);
-            checkLeft(y, x);
+            checkUp();
+            checkDown();
+            checkLeft();
         } else {
-            checkUp(y, x);
-            checkDown(y, x);
-            checkLeft(y, x);
-            checkRight(y, x);
+            // Во всеъ остальных случаях перебираем все варианты
+            checkUp();
+            checkDown();
+            checkLeft();
+            checkRight();
         }
 
         gameField.printField();
@@ -75,19 +81,19 @@ public class Game {
         map[y2][x2] = a;
     }
 
-    private static void checkUp(int y, int x) {
+    private static void checkUp() {
          if (map[y-1][x] == '-') swap(y, x, y-1, x);
     }
 
-    private static void checkDown(int y, int x) {
+    private static void checkDown() {
         if (map[y+1][x] == '-') swap(y, x, y + 1, x);
     }
 
-    private static void checkLeft(int y, int x) {
+    private static void checkLeft() {
         if (map[y][x-1] == '-') swap(y, x, y, x - 1);
     }
 
-    private static void checkRight(int y, int x) {
+    private static void checkRight() {
         if (map[y][x+1] == '-') swap(y, x, y, x + 1);
     }
 
@@ -105,6 +111,18 @@ public class Game {
             }
         }
         return true;
+    }
+
+    private static void getPositionNumber(int num) {
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if (map[i][j] == (char)(num + '0')) {
+                    y = i;
+                    x = j;
+                    return;
+                }
+            }
+        }
     }
 
 }

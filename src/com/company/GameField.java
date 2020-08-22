@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameField {
@@ -9,15 +10,7 @@ public class GameField {
     public GameField(int SIZE) {
         this.SIZE = SIZE;
         map = new char[SIZE][SIZE];
-        map[0][0] = '1';
-        map[0][1] = '2';
-        map[0][2] = '3';
-        map[1][0] = '4';
-        map[1][1] = '5';
-        map[1][2] = '6';
-        map[2][0] = '7';
-        map[2][1] = '-';
-        map[2][2] = '8';
+        generateField();
     }
 
     public char[][] getField() {
@@ -35,6 +28,28 @@ public class GameField {
     }
 
     private void generateField() {
-        // Здесь буду генерировать поле
+        ArrayList<Integer> values = new ArrayList<>();
+        int newValue = (int) (Math.random() * (SIZE * SIZE - 1));
+        values.add(newValue);
+        int k = 0;
+        int iterationNumber = 0;
+
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (newValue == 0) map[i][j] = '-';
+                else map[i][j] = (char)(newValue + '0');
+
+                while (values.contains(newValue)) {
+                    k++;
+                    // Если с 5 раза рандом не сгенерил уникальное значение, то подбираем перебором
+                    if (k > 5) {
+                       newValue = iterationNumber;
+                       iterationNumber++;
+                    } else newValue = (int) (Math.random() * (SIZE * SIZE));
+                }
+                k = 0;
+                values.add(newValue);
+            }
+        }
     }
 }
